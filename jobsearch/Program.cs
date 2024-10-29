@@ -37,7 +37,15 @@ builder.Services.AddSwaggerGen(setup =>
 });
 
 builder.Services.AddHttpClient();
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "allowedOrigins",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+        });
+});
+
 builder.Services.AddDbContext<JobSearchContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("postgres")));
 
 builder.RegisterServices();
@@ -70,12 +78,7 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-app.UseCors(builder => 
-    builder.WithOrigins("http://*:5228/", "http://*:4200/")
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    .AllowCredentials()
-);
+app.UseCors("allowedOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
