@@ -1,3 +1,6 @@
+using JobSearch;
+using JobSearch.Endpoints;
+using JobSearch.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

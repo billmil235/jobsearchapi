@@ -1,3 +1,7 @@
+using JobSearch.Entities;
+
+namespace JobSearch.Services;
+
 public class ContactService(JobSearchContext jobSearchContext)
 {
     private readonly JobSearchContext _jobSearchContext = jobSearchContext;

@@ -1,3 +1,5 @@
+namespace JobSearch.Models;
+
 public class SearchModel
 {
     public Guid SearchId { get; set; }

@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+namespace JobSearch.Entities;
+
 [Table("Contact")]
 public class Contact
 {
@@ -27,4 +29,7 @@ public class Contact
     [Column("emailaddress")]
     [MaxLength(100)]
     public string? EmailAddress { get; set; }
+    
+    [Column("deleted")]
+    public bool Deleted { get; set; }
 }

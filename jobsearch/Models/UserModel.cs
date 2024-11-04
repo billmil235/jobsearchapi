@@ -1,3 +1,5 @@
+namespace JobSearch.Models;
+
 public class UserModel
 {
     public string Username { get; set; } = string.Empty;

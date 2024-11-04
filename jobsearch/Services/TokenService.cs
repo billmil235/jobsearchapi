@@ -1,6 +1,9 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using JobSearch.Models;
+
+namespace JobSearch.Services;
 
 public class TokenService
 {

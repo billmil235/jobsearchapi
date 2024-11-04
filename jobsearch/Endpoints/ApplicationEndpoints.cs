@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+
+namespace JobSearch.Endpoints;
 
 public static class ApplicationEndpoints
 {

@@ -1,3 +1,5 @@
+namespace JobSearch.Models;
+
 public record AuthenticateUserModel
 {
     public string Username { get; set; } = string.Empty;

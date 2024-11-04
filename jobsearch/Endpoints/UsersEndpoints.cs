@@ -1,3 +1,8 @@
+using JobSearch.Models;
+using JobSearch.Services;
+
+namespace JobSearch.Endpoints;
+
 public static class UsersEndpoints
 {
     public static void RegisterUsersEndpoints(this WebApplication app)

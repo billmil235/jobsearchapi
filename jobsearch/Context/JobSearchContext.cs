@@ -1,4 +1,5 @@
 using System.Data.Common;
+using JobSearch.Entities;
 using Microsoft.EntityFrameworkCore;
 
 public class JobSearchContext : DbContext

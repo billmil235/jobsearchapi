@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+namespace JobSearch.Entities;
+
 [Table("search")]
 public class Search 
 {
@@ -19,4 +21,7 @@ public class Search
 
     [Column("searchname")]
     public string SearchName { get; set; } = "Job Search";
+    
+    [Column("deleted")]
+    public bool Deleted { get; set; } = false;
 }

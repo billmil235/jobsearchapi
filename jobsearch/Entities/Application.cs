@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+namespace JobSearch.Entities;
+
 [Table("application")]
 public class Application
 {
@@ -27,4 +29,7 @@ public class Application
     
     [Column("applicationsourcetypeid")]
     public int ApplicationSourceTypeId { get; set; }
+    
+    [Column("deleted")]
+    public bool Deleted { get; set; }
 }

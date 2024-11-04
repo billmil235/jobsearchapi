@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+namespace JobSearch.Entities;
+
 [Table("users")]
 public class Users
 {

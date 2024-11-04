@@ -1,6 +1,13 @@
-namespace jobsearch.Extensions;
+using System.Security.Claims;
 
-public class UserExtensions
+namespace JobSearch.Extensions;
+
+public static class UserExtensions
 {
-    
+    public static Guid GetGuid(this ClaimsPrincipal user)
+    {
+        var guid = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        var userId = new Guid(guid);
+        return userId;
+    }
 }

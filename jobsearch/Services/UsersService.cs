@@ -1,6 +1,10 @@
 using System.Security.Cryptography;
 using System.Text;
+using JobSearch.Entities;
+using JobSearch.Models;
 using Microsoft.EntityFrameworkCore;
+
+namespace JobSearch.Services;
 
 public class UsersService(
     JobSearchContext jobSearchContext,
