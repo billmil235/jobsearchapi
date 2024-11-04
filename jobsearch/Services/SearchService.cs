@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using JobSearch.Entities;
 using JobSearch.Models;
 using Microsoft.EntityFrameworkCore;
@@ -6,10 +7,10 @@ namespace JobSearch.Services;
 
 public class SearchService(JobSearchContext jobSearchContext)
 {
-    public async IAsyncEnumerable<SearchModel> GetSearchesForUser(Guid userId)
+    public async IAsyncEnumerable<SearchModel> GetSearchesForUser(Guid userId, Guid? searchId = null)
     {
         var searches = await jobSearchContext.Searches
-            .Where(s => s.UserId == userId && s.Deleted == false)
+            .Where(s => s.UserId == userId && s.Deleted == false && (s.SearchId == searchId || searchId == null))
             .Select(search => new SearchModel 
             { 
                 SearchId = search.SearchId,
