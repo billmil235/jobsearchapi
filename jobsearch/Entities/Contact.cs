@@ -6,7 +6,6 @@ namespace JobSearch.Entities;
 [Table("Contact")]
 public class Contact
 {
-
     [Column("contactid")]
     [Key]
     public Guid ContactId { get; set; }
