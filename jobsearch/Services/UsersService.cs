@@ -29,7 +29,7 @@ public class UsersService(
                 EMailVerified = false
             };
 
-            _jobSearchContext.Users.Add(newUser);
+            await _jobSearchContext.Users.AddAsync(newUser);
             await _jobSearchContext.SaveChangesAsync();
 
             user.Password = HashPassword(user.Password, newUser.UserId);

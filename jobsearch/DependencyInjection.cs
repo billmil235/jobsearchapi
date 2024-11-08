@@ -12,5 +12,6 @@ public static class DependencyInjection
         builder.Services.AddScoped<ActivityService>();
         builder.Services.AddScoped<ContactService>();
         builder.Services.AddScoped<LookupService>();
+        builder.Services.AddScoped<ApplicationService>();
     }
 }

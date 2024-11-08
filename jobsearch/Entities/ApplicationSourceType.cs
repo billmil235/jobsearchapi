@@ -8,8 +8,9 @@ public class ApplicationSourceType
 {
     [Key]
     [Column("applicationsourcetypeid")]
-    public int ApplicationSourceTypeId { get; set; } 
-    
+    public int ApplicationSourceTypeId { get; set; }
+
     [Column("applicationsourcetypename")]
-    public string ApplicationSourceTypeName { get; set; }
+    [MaxLength(50)]
+    public string ApplicationSourceTypeName { get; set; } = string.Empty;
 }

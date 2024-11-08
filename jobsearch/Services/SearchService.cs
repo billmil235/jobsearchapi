@@ -37,7 +37,7 @@ public class SearchService(JobSearchContext jobSearchContext)
             EndDate = null
         };
 
-        jobSearchContext.Searches.Add(newSearch);
+        await jobSearchContext.Searches.AddAsync(newSearch);
         await jobSearchContext.SaveChangesAsync();
 
         return Results.Ok(newSearch);
