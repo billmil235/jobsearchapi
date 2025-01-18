@@ -7,6 +7,8 @@ namespace JobSearch.Services;
 
 public class TokenService
 {
+    //https://www.youtube.com/watch?v=rpHJMcQVybI
+    
     public string GenerateToken(AuthenticateUserModel user, Guid userId)
     {
         var tokenHandler = new JwtSecurityTokenHandler();

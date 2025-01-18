@@ -1,8 +1,6 @@
 using System.Security.Claims;
 using JobSearch.Models;
 using JobSearch.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
 
 namespace JobSearch.Endpoints;
 
@@ -22,7 +20,7 @@ public static class ApplicationEndpoints
         app.MapGet("/ApplicationSources", (LookupService lookupService) => Results.Ok(lookupService.GetApplicationSourceTypes()) )
         .RequireAuthorization("user");
 
-        app.MapPost("/CreateApplicationContact", (JobSearchContext db) => Results.Ok() )
-        .RequireAuthorization("user");
+        app.MapDelete("/DeleteApplication/{applicationId}",
+            (string applicationId, ApplicationService applicationService) => applicationService.DeleteApplication(applicationId));
     }
 }

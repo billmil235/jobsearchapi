@@ -36,20 +36,17 @@ builder.Services.AddSwaggerGen(setup =>
     {
         { jwtSecurityScheme, Array.Empty<string>() }
     });
-
 });
 
 builder.Services.AddHttpClient();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "allowedOrigins",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
-        });
+        policy => { policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader(); });
 });
 
-builder.Services.AddDbContext<JobSearchContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("postgres")));
+builder.Services.AddDbContext<JobSearchContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("postgres")));
 
 builder.RegisterServices();
 
@@ -68,7 +65,8 @@ builder.Services.AddAuthentication(config =>
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(secretKey),
             ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateAudience = false,
+            ValidateLifetime = true
         };
     }
 );

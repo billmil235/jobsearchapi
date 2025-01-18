@@ -6,10 +6,17 @@ namespace JobSearch.Services;
 
 public class ApplicationService(JobSearchContext jobSearchContext)
 {
-    public async IAsyncEnumerable<ApplicationModel> ListApplications(string searchId)
+    public async IAsyncEnumerable<ApplicationModel> ListApplications(string searchId, bool includeDeleted = false)
     {
-        var applicationList = await jobSearchContext.Applications
-            .Where(s => s.SearchId == new Guid(searchId))
+        var applicationListQuery = jobSearchContext.Applications
+            .Where(s => s.SearchId == new Guid(searchId));
+
+        if (!includeDeleted)
+        {
+            applicationListQuery = applicationListQuery.Where(a => a.Deleted == false);
+        }
+        
+        var applicationList = await applicationListQuery
             .Select(x => new ApplicationModel
             {
                 ApplicationDate = x.ApplicationDate.ToDateTime(new TimeOnly(0,0,0)),
@@ -38,6 +45,7 @@ public class ApplicationService(JobSearchContext jobSearchContext)
             CompanyName = application.CompanyName,
             CompanyWebSite = application.CompanyWebSite,
             SearchId = new Guid(application.SearchId),
+            Deleted = false
         };
 
         try
@@ -52,5 +60,23 @@ public class ApplicationService(JobSearchContext jobSearchContext)
         {
             return Results.BadRequest(e.Message);
         }
+    }
+
+    public async Task<IResult> DeleteApplication(string applicationId)
+    {
+        var application = await jobSearchContext.Applications
+            .FirstOrDefaultAsync(x => x.ApplicationId == new Guid(applicationId));
+        
+        if (application != null)
+        {
+            application.Deleted = true;
+            await jobSearchContext.SaveChangesAsync();
+        }
+        else
+        {
+            return Results.NotFound();
+        }
+        
+        return Results.Ok();
     }
 }
