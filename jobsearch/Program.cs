@@ -93,7 +93,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.RegisterJobSearchEndpoints();
-app.RegisterApplicationEndpoints();
+app.MapGroup("/Application").RegisterApplicationEndpoints().RequireAuthorization("user");
 app.RegisterContactEndpoints();
 app.RegisterUsersEndpoints();
 

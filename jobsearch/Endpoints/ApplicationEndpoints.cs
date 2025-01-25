@@ -6,21 +6,23 @@ namespace JobSearch.Endpoints;
 
 public static class ApplicationEndpoints
 {
-    public static void RegisterApplicationEndpoints(this WebApplication app)
+    public static RouteGroupBuilder RegisterApplicationEndpoints(this RouteGroupBuilder group)
     {
-        app.MapGet("/ListApplications/{searchId}", (string searchId, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.ListApplications(searchId))
-        .RequireAuthorization("user");
+        group.MapGet("/List/{searchId}", 
+            (string searchId, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.ListApplications(searchId));
 
-        app.MapPost("/CreateApplication", (Application application, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.CreateApplication(application))
-        .RequireAuthorization("user");
+        group.MapPost("/", 
+            (Application application, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.CreateApplication(application));
         
-        app.MapGet("/ApplicationTypes", (LookupService lookupService) => Results.Ok(lookupService.GetApplicationTypes()) )
-        .RequireAuthorization("user");
+        group.MapGet("/Types", 
+            (LookupService lookupService) => Results.Ok(lookupService.GetApplicationTypes()) );
 
-        app.MapGet("/ApplicationSources", (LookupService lookupService) => Results.Ok(lookupService.GetApplicationSourceTypes()) )
-        .RequireAuthorization("user");
+        group.MapGet("/Sources", 
+            (LookupService lookupService) => Results.Ok(lookupService.GetApplicationSourceTypes()) );
 
-        app.MapDelete("/DeleteApplication/{applicationId}",
+        group.MapDelete("/{applicationId}",
             (string applicationId, ApplicationService applicationService) => applicationService.DeleteApplication(applicationId));
+
+        return group;
     }
 }

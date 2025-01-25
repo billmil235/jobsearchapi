@@ -9,18 +9,16 @@ public static class JobSearchEndpoints
 {
     public static void RegisterJobSearchEndpoints(this WebApplication app)
     {
-        app.MapGet("/GetSearch/{searchId}", (string searchId, ClaimsPrincipal user, SearchService searchService) =>
+        app.MapGet("/Searches", (string? searchId, ClaimsPrincipal user, SearchService searchService) =>
         {
-            var userId = user.GetGuid(); 
-            var searchIdGuid = new Guid(searchId); 
-            return searchService.GetSearchesForUser(userId, searchIdGuid);
-        })
-        .RequireAuthorization("user");
-        
-        app.MapGet("/Searches", (ClaimsPrincipal user, SearchService searchService) =>
-        {
+            Guid? searchIdGuid = null;
             var userId = user.GetGuid();
-            return searchService.GetSearchesForUser(userId);
+            
+            if (searchId != null)
+            {
+                searchIdGuid = new Guid(searchId);
+            }
+            return searchService.GetSearchesForUser(userId, searchIdGuid);
         })
         .RequireAuthorization("user");
         
