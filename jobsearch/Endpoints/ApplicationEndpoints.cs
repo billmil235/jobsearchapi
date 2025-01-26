@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using JobSearch.Models;
 using JobSearch.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace JobSearch.Endpoints;
 
@@ -22,6 +23,9 @@ public static class ApplicationEndpoints
 
         group.MapDelete("/{applicationId}",
             (string applicationId, ApplicationService applicationService) => applicationService.DeleteApplication(applicationId));
+
+        group.MapGet("/Preview/{applicationId}",
+            (string applicationId, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.GetApplicationPreview(applicationId) );
 
         return group;
     }

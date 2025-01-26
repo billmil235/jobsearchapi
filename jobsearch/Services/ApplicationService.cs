@@ -1,5 +1,6 @@
-using JobSearch.Entities;
+using JobSearch.Models;
 using Microsoft.EntityFrameworkCore;
+using Application = JobSearch.Entities.Application;
 using ApplicationModel = JobSearch.Models.Application;
 
 namespace JobSearch.Services;
@@ -66,17 +67,30 @@ public class ApplicationService(JobSearchContext jobSearchContext)
     {
         var application = await jobSearchContext.Applications
             .FirstOrDefaultAsync(x => x.ApplicationId == new Guid(applicationId));
+
+        if (application == null) return Results.BadRequest();
         
-        if (application != null)
-        {
-            application.Deleted = true;
-            await jobSearchContext.SaveChangesAsync();
-        }
-        else
-        {
-            return Results.NotFound();
-        }
-        
+        application.Deleted = true;
+        await jobSearchContext.SaveChangesAsync();
         return Results.Ok();
+
+    }
+
+    public async Task<IResult> GetApplicationPreview(string applicationId)
+    {
+        var application = await jobSearchContext.Applications.FirstOrDefaultAsync(x => x.ApplicationId == new Guid(applicationId));
+
+        if (application == null) return Results.NotFound();
+        
+        var preview = new ApplicationPreview()
+        {
+            CompanyName = application.CompanyName,
+            ApplicationId = application.ApplicationId,
+            ApplicationDate = application.ApplicationDate,
+            Notes = string.Empty
+        };
+
+        return Results.Ok(preview);
+
     }
 }
