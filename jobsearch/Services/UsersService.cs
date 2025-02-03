@@ -10,18 +10,15 @@ public class UsersService(
     JobSearchContext jobSearchContext,
     TokenService tokenService)
 {
-    private readonly JobSearchContext _jobSearchContext = jobSearchContext;
-    private readonly TokenService _tokenService = tokenService;
-
     public async Task<IResult> RegisterUser(UserModel user)
     {
-        var dbUser = await _jobSearchContext.Users.FirstOrDefaultAsync(u => u.UserName == user.Username);
+        var dbUser = await jobSearchContext.Users.FirstOrDefaultAsync(u => u.UserName == user.Username);
 
         if(dbUser == null) 
         {
             Users newUser = new()
             {
-                UserName = user.Username,
+                UserName = user.Username.ToLower(),
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Password = string.Empty,
@@ -29,12 +26,12 @@ public class UsersService(
                 EMailVerified = false
             };
 
-            await _jobSearchContext.Users.AddAsync(newUser);
-            await _jobSearchContext.SaveChangesAsync();
+            await jobSearchContext.Users.AddAsync(newUser);
+            await jobSearchContext.SaveChangesAsync();
 
             user.Password = HashPassword(user.Password, newUser.UserId);
             
-            await _jobSearchContext.SaveChangesAsync();
+            await jobSearchContext.SaveChangesAsync();
 
             return Results.Ok();
         }
@@ -44,7 +41,7 @@ public class UsersService(
 
     public async Task<IResult> Login(AuthenticateUserModel user)
     {
-        var dbUser = await _jobSearchContext.Users.FirstOrDefaultAsync(u => u.UserName == user.Username);
+        var dbUser = await jobSearchContext.Users.FirstOrDefaultAsync(u => u.UserName == user.Username.ToLower());
 
         if(dbUser == null)
             return Results.NotFound(new { message = "Invalid username or password." });
@@ -54,7 +51,7 @@ public class UsersService(
         if (!verified)
             return Results.NotFound(new { message = "Invalid username or password" });
 
-        var token = _tokenService.GenerateToken(user, dbUser.UserId);
+        var token = tokenService.GenerateToken(user, dbUser.UserId);
 
         var userModel = new UserModel()
         {
