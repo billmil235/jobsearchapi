@@ -22,3 +22,12 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
+    - name: Stop API Service
+      run: sudo stop JobSearchAPI
+
+    - name: Publish API
+      run: dotnet publish --output /var/www/jobsearchapi
+
+    - name: Start API Service
+      run: sudo start JobSearchAPI
