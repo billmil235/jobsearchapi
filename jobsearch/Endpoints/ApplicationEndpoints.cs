@@ -16,10 +16,10 @@ public static class ApplicationEndpoints
             (Application application, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.CreateApplication(application));
         
         group.MapGet("/Types", 
-            (LookupService lookupService) => Results.Ok(lookupService.GetApplicationTypes()) );
+           async (LookupService lookupService) => Results.Ok(await lookupService.GetApplicationTypes()) );
 
         group.MapGet("/Sources", 
-            (LookupService lookupService) => Results.Ok(lookupService.GetApplicationSourceTypes()) );
+            async (LookupService lookupService) => Results.Ok(await lookupService.GetApplicationSourceTypes()) );
 
         group.MapDelete("/{applicationId}",
             (string applicationId, ApplicationService applicationService) => applicationService.DeleteApplication(applicationId));

@@ -45,6 +45,9 @@ builder.Services.AddCors(options =>
         policy => { policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader(); });
 });
 
+#pragma warning disable EXTEXP0018
+builder.Services.AddHybridCache();
+
 builder.Services.AddDbContext<JobSearchContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("postgres")));
 

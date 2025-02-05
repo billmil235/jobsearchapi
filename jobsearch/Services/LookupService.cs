@@ -1,30 +1,45 @@
-using System.Collections;
 using JobSearch.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 
 namespace JobSearch.Services;
 
-public class LookupService(JobSearchContext jobSearchContext)
+public class LookupService(JobSearchContext jobSearchContext, HybridCache cache)
 {
-    private readonly JobSearchContext _jobSearchContext = jobSearchContext;
-
-    public async IAsyncEnumerable<ApplicationSourceType> GetApplicationSourceTypes()
+    public async ValueTask<List<ApplicationSourceType>> GetApplicationSourceTypes()
     {
-        var applicationSourceTypes = await _jobSearchContext.ApplicationSourceTypes.ToListAsync();
+        return await cache.GetOrCreateAsync(
+            $"LookUps:ApplicationSourceTypes",
+            Factory,
+            null,
+            null,
+            CancellationToken.None
+        );
 
-        foreach (var sourceType in applicationSourceTypes)
-        {
-            yield return sourceType;
-        }
+        async ValueTask<List<ApplicationSourceType>> Factory(CancellationToken cancel) => 
+            await jobSearchContext.ApplicationSourceTypes.Select(appType => new ApplicationSourceType
+            {
+                ApplicationSourceTypeId = appType.ApplicationSourceTypeId,
+                ApplicationSourceTypeName = appType.ApplicationSourceTypeName,
+            }).ToListAsync(cancellationToken: cancel);
     }
 
-    public async IAsyncEnumerable<ApplicationType> GetApplicationTypes()
+    public async ValueTask<List<ApplicationType>> GetApplicationTypes()
     {
-        var applicationTypes = await _jobSearchContext.ApplicationTypes.ToListAsync();
-
-        foreach (var applicationType in applicationTypes)
-        {
-            yield return applicationType;
-        }
+        
+        return await cache.GetOrCreateAsync(
+            $"LookUps:ApplicationTypes",
+            Factory,
+            null,
+            null,
+            CancellationToken.None
+        );
+        
+        async ValueTask<List<ApplicationType>> Factory(CancellationToken cancel) => 
+            await jobSearchContext.ApplicationTypes.Select(appType => new ApplicationType
+            {
+                ApplicationTypeId = appType.ApplicationTypeId,
+                ApplicationTypeName = appType.ApplicationTypeName,
+            }).ToListAsync(cancellationToken: cancel);
     }
 }
