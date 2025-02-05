@@ -24,10 +24,10 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
     - name: Stop API Service
-      run: sudo stop JobSearchAPI
+      run: sudo systemctl stop JobSearchAPI
 
     - name: Publish API
       run: dotnet publish --output /var/www/jobsearchapi
 
     - name: Start API Service
-      run: sudo start JobSearchAPI
+      run: sudo systemctl start JobSearchAPI
