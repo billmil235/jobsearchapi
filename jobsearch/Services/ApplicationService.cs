@@ -1,4 +1,5 @@
 using JobSearch.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Application = JobSearch.Entities.Application;
 using ApplicationModel = JobSearch.Models.Application;
@@ -59,7 +60,12 @@ public class ApplicationService(JobSearchContext jobSearchContext)
         }
         catch (Exception e)
         {
-            return Results.BadRequest(e.Message);
+            return Results.Problem(new ProblemDetails
+            {
+                Detail = "Unable to create application.",
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "Internal server error"
+            });
         }
     }
 
@@ -68,7 +74,14 @@ public class ApplicationService(JobSearchContext jobSearchContext)
         var application = await jobSearchContext.Applications
             .FirstOrDefaultAsync(x => x.ApplicationId == new Guid(applicationId));
 
-        if (application == null) return Results.BadRequest();
+        if (application == null)
+        {
+            return Results.Problem(new ProblemDetails {
+                Detail = "Failed to delete application.",
+                Status = StatusCodes.Status404NotFound,
+                Title = "Application not found"
+            });
+        }
         
         application.Deleted = true;
         await jobSearchContext.SaveChangesAsync();
@@ -80,8 +93,16 @@ public class ApplicationService(JobSearchContext jobSearchContext)
     {
         var application = await jobSearchContext.Applications.FirstOrDefaultAsync(x => x.ApplicationId == new Guid(applicationId));
 
-        if (application == null) return Results.NotFound();
-        
+        if (application == null)
+        {
+            return Results.Problem(new ProblemDetails
+            {
+                Detail = "Failed to retrieve application.",
+                Status = StatusCodes.Status404NotFound,
+                Title = "Application not found"
+            });
+        }
+
         var preview = new ApplicationPreview()
         {
             CompanyName = application.CompanyName,

@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using JobSearch.Entities;
 using JobSearch.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobSearch.Services;
@@ -12,44 +13,65 @@ public class UsersService(
 {
     public async Task<IResult> RegisterUser(UserModel user)
     {
-        var dbUser = await jobSearchContext.Users.FirstOrDefaultAsync(u => u.UserName == user.Username);
+        var dbUser = await FindUser(user.Username);
 
-        if(dbUser == null) 
+        if (dbUser != null)
         {
-            Users newUser = new()
+            return Results.Problem(new ProblemDetails
             {
-                UserName = user.Username.ToLower(),
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Password = string.Empty,
-                DateOfBirth = user.DateOfBirth,
-                EMailVerified = false
-            };
-
-            await jobSearchContext.Users.AddAsync(newUser);
-            await jobSearchContext.SaveChangesAsync();
-
-            user.Password = HashPassword(user.Password, newUser.UserId);
-            
-            await jobSearchContext.SaveChangesAsync();
-
-            return Results.Ok();
+                Detail = "Username already in use.",
+                Status = StatusCodes.Status404NotFound,
+                Title = "Failed to register user"
+            });
         }
-        else
-            return Results.BadRequest(new { message = "Username already in use." });
+
+        Users newUser = new()
+        {
+            UserName = user.Username.ToLower(),
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Password = string.Empty,
+            DateOfBirth = user.DateOfBirth,
+            EMailVerified = false
+        };
+
+        await jobSearchContext.Users.AddAsync(newUser);
+        await jobSearchContext.SaveChangesAsync();
+
+        // Password is hashed after the user is created because the users GUID is used as the salt.
+        user.Password = HashPassword(user.Password, newUser.UserId);
+            
+        await jobSearchContext.SaveChangesAsync();
+
+        return Results.Ok();
+
     }
 
     public async Task<IResult> Login(AuthenticateUserModel user)
     {
-        var dbUser = await jobSearchContext.Users.FirstOrDefaultAsync(u => u.UserName == user.Username.ToLower());
+        var dbUser = await FindUser(user.Username);
 
-        if(dbUser == null)
-            return Results.NotFound(new { message = "Invalid username or password." });
+        if (dbUser == null)
+        {
+            return Results.Problem(new ProblemDetails
+            {
+                Detail = "Invalid username or bad password.",
+                Status = StatusCodes.Status404NotFound,
+                Title = "Failed to login"
+            });
+        }
 
         var verified = VerifyUser(user.Password, dbUser.Password, dbUser.UserId);
 
         if (!verified)
-            return Results.NotFound(new { message = "Invalid username or password" });
+        {
+            return Results.Problem(new ProblemDetails
+            {
+                Detail = "Invalid username or bad password.",
+                Status = StatusCodes.Status404NotFound,
+                Title = "Failed to login"
+            });
+        }
 
         var token = tokenService.GenerateToken(user, dbUser.UserId);
 
@@ -63,6 +85,12 @@ public class UsersService(
         return Results.Ok(new { User = userModel, Token = token });
     }
 
+    private async Task<Users?> FindUser(string userName)
+    { 
+        return await jobSearchContext.Users
+            .FirstOrDefaultAsync(u => u.UserName == userName.ToLower());
+    }
+    
     private static bool VerifyUser(string submittedPassword, string storedPassword, Guid userId)
     {
         var submittedPasswordHash = HashPassword(submittedPassword, userId);

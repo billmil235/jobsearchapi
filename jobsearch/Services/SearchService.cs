@@ -1,6 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using JobSearch.Entities;
 using JobSearch.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobSearch.Services;
@@ -37,10 +38,22 @@ public class SearchService(JobSearchContext jobSearchContext)
             EndDate = null
         };
 
-        await jobSearchContext.Searches.AddAsync(newSearch);
-        await jobSearchContext.SaveChangesAsync();
+        try
+        {
+            await jobSearchContext.Searches.AddAsync(newSearch);
+            await jobSearchContext.SaveChangesAsync();
 
-        return Results.Ok(newSearch);
+            return Results.Ok(newSearch);
+        }
+        catch (Exception e)
+        {
+            return Results.Problem(new ProblemDetails
+            {
+                Detail = "Failed to create new search.",
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "Internal server error"
+            });
+        }
     }
 
     public async Task<IResult> DeleteSearch(Guid searchId, Guid userId)
@@ -54,7 +67,12 @@ public class SearchService(JobSearchContext jobSearchContext)
             return Results.Ok();
         }
 
-        return Results.BadRequest("Failed to update job search.  Job search not found.");
+        return Results.Problem(new ProblemDetails
+        {
+            Detail = "Failed to delete job search.",
+            Status = StatusCodes.Status404NotFound,
+            Title = "Job search not found"
+        });
     }
 
     public async Task<IResult> UpdateSearch(SearchModel searchModel, Guid userId)
@@ -72,6 +90,11 @@ public class SearchService(JobSearchContext jobSearchContext)
             return Results.Ok();
         }
 
-        return Results.BadRequest("Failed to update job search.  Job search not found.");
+        return Results.Problem(new ProblemDetails
+        {
+            Detail = "Failed to update job search.",
+            Status = StatusCodes.Status404NotFound,
+            Title = "Job search not found"
+        });
     }
 }
