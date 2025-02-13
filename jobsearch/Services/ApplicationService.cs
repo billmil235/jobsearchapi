@@ -1,8 +1,7 @@
 using JobSearch.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Application = JobSearch.Entities.Application;
-using ApplicationModel = JobSearch.Models.Application;
+using JobSearch.Entities;
 
 namespace JobSearch.Services;
 
@@ -58,7 +57,7 @@ public class ApplicationService(JobSearchContext jobSearchContext)
 
             return Results.Ok(application);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return Results.Problem(new ProblemDetails
             {

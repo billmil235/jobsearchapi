@@ -1,4 +1,5 @@
 using JobSearch.Entities;
+using JobSearch.Models.Lookups;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 
@@ -6,7 +7,7 @@ namespace JobSearch.Services;
 
 public class LookupService(JobSearchContext jobSearchContext, HybridCache cache)
 {
-    public async ValueTask<List<ApplicationSourceType>> GetApplicationSourceTypes()
+    public async ValueTask<List<ApplicationSourceTypeLookup>> GetApplicationSourceTypes()
     {
         return await cache.GetOrCreateAsync(
             $"LookUps:ApplicationSourceTypes",
@@ -16,15 +17,15 @@ public class LookupService(JobSearchContext jobSearchContext, HybridCache cache)
             CancellationToken.None
         );
 
-        async ValueTask<List<ApplicationSourceType>> Factory(CancellationToken cancel) => 
-            await jobSearchContext.ApplicationSourceTypes.Select(appType => new ApplicationSourceType
+        async ValueTask<List<ApplicationSourceTypeLookup>> Factory(CancellationToken cancel) => 
+            await jobSearchContext.ApplicationSourceTypes.Select(appType => new ApplicationSourceTypeLookup
             {
                 ApplicationSourceTypeId = appType.ApplicationSourceTypeId,
                 ApplicationSourceTypeName = appType.ApplicationSourceTypeName,
             }).ToListAsync(cancellationToken: cancel);
     }
 
-    public async ValueTask<List<ApplicationType>> GetApplicationTypes()
+    public async ValueTask<List<ApplicationTypeLookup>> GetApplicationTypes()
     {
         
         return await cache.GetOrCreateAsync(
@@ -35,8 +36,8 @@ public class LookupService(JobSearchContext jobSearchContext, HybridCache cache)
             CancellationToken.None
         );
         
-        async ValueTask<List<ApplicationType>> Factory(CancellationToken cancel) => 
-            await jobSearchContext.ApplicationTypes.Select(appType => new ApplicationType
+        async ValueTask<List<ApplicationTypeLookup>> Factory(CancellationToken cancel) => 
+            await jobSearchContext.ApplicationTypes.Select(appType => new ApplicationTypeLookup
             {
                 ApplicationTypeId = appType.ApplicationTypeId,
                 ApplicationTypeName = appType.ApplicationTypeName,

@@ -13,7 +13,7 @@ public static class ApplicationEndpoints
             (string searchId, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.ListApplications(searchId));
 
         group.MapPost("/", 
-            (Application application, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.CreateApplication(application));
+            (ApplicationModel application, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.CreateApplication(application));
         
         group.MapGet("/Types", 
            async (LookupService lookupService) => Results.Ok(await lookupService.GetApplicationTypes()) );

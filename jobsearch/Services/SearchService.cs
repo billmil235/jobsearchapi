@@ -45,7 +45,7 @@ public class SearchService(JobSearchContext jobSearchContext)
 
             return Results.Ok(newSearch);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return Results.Problem(new ProblemDetails
             {

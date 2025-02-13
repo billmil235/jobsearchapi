@@ -1,9 +1,9 @@
 namespace JobSearch.Models;
 
-public class Application
+public class ApplicationModel
 {
     public string? ApplicationId { get; set; }
-    public string SearchId { get; set; } = new Guid().ToString();
+    public string SearchId { get; set; } = Guid.Empty.ToString();
     public DateTime ApplicationDate { get; set; }
     public string CompanyName { get; set; } = string.Empty;
     public string? CompanyWebSite { get; set; }

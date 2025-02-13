@@ -20,27 +20,24 @@ public class UsersService(
             return Results.Problem(new ProblemDetails
             {
                 Detail = "Username already in use.",
-                Status = StatusCodes.Status404NotFound,
+                Status = StatusCodes.Status409Conflict,
                 Title = "Failed to register user"
             });
         }
 
+        var userId = Guid.NewGuid();
         Users newUser = new()
         {
+            UserId = userId,
             UserName = user.Username.ToLower(),
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Password = string.Empty,
-            DateOfBirth = user.DateOfBirth,
+            Password = HashPassword(user.Password, userId),
+            DateOfBirth = DateOnly.FromDateTime(user.DateOfBirth),
             EMailVerified = false
         };
-
+        
         await jobSearchContext.Users.AddAsync(newUser);
-        await jobSearchContext.SaveChangesAsync();
-
-        // Password is hashed after the user is created because the users GUID is used as the salt.
-        user.Password = HashPassword(user.Password, newUser.UserId);
-            
         await jobSearchContext.SaveChangesAsync();
 
         return Results.Ok();
@@ -56,7 +53,7 @@ public class UsersService(
             return Results.Problem(new ProblemDetails
             {
                 Detail = "Invalid username or bad password.",
-                Status = StatusCodes.Status404NotFound,
+                Status = StatusCodes.Status403Forbidden,
                 Title = "Failed to login"
             });
         }
@@ -68,7 +65,7 @@ public class UsersService(
             return Results.Problem(new ProblemDetails
             {
                 Detail = "Invalid username or bad password.",
-                Status = StatusCodes.Status404NotFound,
+                Status = StatusCodes.Status403Forbidden,
                 Title = "Failed to login"
             });
         }
@@ -79,7 +76,7 @@ public class UsersService(
         {
             FirstName = dbUser.FirstName,
             LastName = dbUser.LastName,
-            DateOfBirth = dbUser.DateOfBirth
+            DateOfBirth = dbUser.DateOfBirth.ToDateTime(new TimeOnly(0,0,0))
         };
 
         return Results.Ok(new { User = userModel, Token = token });
@@ -101,7 +98,7 @@ public class UsersService(
     {
         var hashedPasswordBytes = Encoding.UTF8.GetBytes($"{userId.ToString()}{password}");
 
-        for(int round = 0; round < 10000; round++) 
+        for(var round = 0; round < 10000; round++) 
             hashedPasswordBytes = SHA512.HashData(hashedPasswordBytes);
 
         var hashedInputStringBuilder = new System.Text.StringBuilder(128);

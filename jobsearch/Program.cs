@@ -4,6 +4,7 @@ using JobSearch.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -61,7 +62,15 @@ builder.Services.AddCors(options =>
 });
 
 #pragma warning disable EXTEXP0018
-builder.Services.AddHybridCache();
+builder.Services.AddHybridCache(options =>
+{
+    options.DefaultEntryOptions = new HybridCacheEntryOptions
+    {
+        Expiration = TimeSpan.FromMinutes(5),
+        LocalCacheExpiration = TimeSpan.FromMinutes(5)
+    };
+});
+#pragma warning restore EXTEXP0018
 
 builder.Services.AddDbContext<JobSearchContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("postgres")));
