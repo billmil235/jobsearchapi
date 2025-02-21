@@ -7,7 +7,7 @@ namespace JobSearch.Services;
 
 public class ApplicationService(JobSearchContext jobSearchContext)
 {
-    public async IAsyncEnumerable<ApplicationModel> ListApplications(string searchId, bool includeDeleted = false)
+    public async IAsyncEnumerable<ApplicationModel> ListApplications(string searchId, bool activeOnly = false, bool includeDeleted = false)
     {
         var applicationListQuery = jobSearchContext.Applications
             .Where(s => s.SearchId == new Guid(searchId));
@@ -15,6 +15,11 @@ public class ApplicationService(JobSearchContext jobSearchContext)
         if (!includeDeleted)
         {
             applicationListQuery = applicationListQuery.Where(a => a.Deleted == false);
+        }
+
+        if (activeOnly)
+        {
+            applicationListQuery = applicationListQuery.Where(a => a.Active == true);
         }
         
         var applicationList = await applicationListQuery

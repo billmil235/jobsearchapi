@@ -32,4 +32,7 @@ public class Application
     
     [Column("deleted")]
     public bool Deleted { get; set; }
+    
+    [Column("active")]
+    public bool Active { get; set; }
 }

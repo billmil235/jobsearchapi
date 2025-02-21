@@ -2,6 +2,7 @@ using System.Security.Claims;
 using JobSearch.Models;
 using JobSearch.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JobSearch.Endpoints;
 
@@ -10,7 +11,7 @@ public static class ApplicationEndpoints
     public static RouteGroupBuilder RegisterApplicationEndpoints(this RouteGroupBuilder group)
     {
         group.MapGet("/List/{searchId}", 
-            (string searchId, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.ListApplications(searchId));
+            (string searchId, [FromQuery] bool activeOnly, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.ListApplications(searchId, activeOnly));
 
         group.MapPost("/", 
             (ApplicationModel application, ClaimsPrincipal user, ApplicationService applicationService) => applicationService.CreateApplication(application));
