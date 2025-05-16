@@ -2,6 +2,7 @@ using JobSearch.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using JobSearch.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace JobSearch.Services;
 
@@ -41,7 +42,7 @@ public class ApplicationService(JobSearchContext jobSearchContext)
         }
     }
     
-    public async Task<IResult> CreateApplication(ApplicationModel application)
+    public async Task<Results<Ok<ApplicationModel>, ProblemHttpResult>> CreateApplication(ApplicationModel application)
     {
         var applicationEntity = new Application
         {
@@ -60,11 +61,11 @@ public class ApplicationService(JobSearchContext jobSearchContext)
             application.ApplicationId = applicationEntity.ApplicationId.ToString();
             await jobSearchContext.SaveChangesAsync();
 
-            return Results.Ok(application);
+            return TypedResults.Ok(application);
         }
         catch (Exception)
         {
-            return Results.Problem(new ProblemDetails
+            return TypedResults.Problem(new ProblemDetails
             {
                 Detail = "Unable to create application.",
                 Status = StatusCodes.Status500InternalServerError,
@@ -93,13 +94,13 @@ public class ApplicationService(JobSearchContext jobSearchContext)
 
     }
 
-    public async Task<IResult> GetApplicationPreview(string applicationId)
+    public async Task<Results<Ok<ApplicationPreview>, ProblemHttpResult>> GetApplicationPreview(string applicationId)
     {
         var application = await jobSearchContext.Applications.FirstOrDefaultAsync(x => x.ApplicationId == new Guid(applicationId));
 
         if (application == null)
         {
-            return Results.Problem(new ProblemDetails
+            return TypedResults.Problem(new ProblemDetails
             {
                 Detail = "Failed to retrieve application.",
                 Status = StatusCodes.Status404NotFound,
@@ -115,7 +116,7 @@ public class ApplicationService(JobSearchContext jobSearchContext)
             Notes = string.Empty
         };
 
-        return Results.Ok(preview);
+        return TypedResults.Ok(preview);
 
     }
 }

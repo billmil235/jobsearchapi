@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using JobSearch.Models;
 using JobSearch.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobSearch.Endpoints;

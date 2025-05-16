@@ -1,6 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using JobSearch.Entities;
 using JobSearch.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +29,7 @@ public class SearchService(JobSearchContext jobSearchContext)
         }
     }
 
-    public async Task<IResult> CreateNewSearch(SearchModel searchModel,  Guid userId)
+    public async Task<Results<Ok<Search>, ProblemHttpResult>> CreateNewSearch(SearchModel searchModel,  Guid userId)
     {
         var newSearch = new Search() 
         {
@@ -43,11 +44,11 @@ public class SearchService(JobSearchContext jobSearchContext)
             await jobSearchContext.Searches.AddAsync(newSearch);
             await jobSearchContext.SaveChangesAsync();
 
-            return Results.Ok(newSearch);
+            return TypedResults.Ok(newSearch);
         }
         catch (Exception)
         {
-            return Results.Problem(new ProblemDetails
+            return TypedResults.Problem(new ProblemDetails
             {
                 Detail = "Failed to create new search.",
                 Status = StatusCodes.Status500InternalServerError,
@@ -56,7 +57,7 @@ public class SearchService(JobSearchContext jobSearchContext)
         }
     }
 
-    public async Task<IResult> DeleteSearch(Guid searchId, Guid userId)
+    public async Task<Results<Ok, ProblemHttpResult>> DeleteSearch(Guid searchId, Guid userId)
     {
         var oldSearch = await jobSearchContext.Searches.FirstOrDefaultAsync(s => s.SearchId == searchId && s.UserId == userId);
 
@@ -64,10 +65,10 @@ public class SearchService(JobSearchContext jobSearchContext)
         {
             oldSearch.Deleted = true;
             await jobSearchContext.SaveChangesAsync();
-            return Results.Ok();
+            return TypedResults.Ok();
         }
 
-        return Results.Problem(new ProblemDetails
+        return TypedResults.Problem(new ProblemDetails
         {
             Detail = "Failed to delete job search.",
             Status = StatusCodes.Status404NotFound,
@@ -75,7 +76,7 @@ public class SearchService(JobSearchContext jobSearchContext)
         });
     }
 
-    public async Task<IResult> UpdateSearch(SearchModel searchModel, Guid userId)
+    public async Task<Results<Ok, ProblemHttpResult>> UpdateSearch(SearchModel searchModel, Guid userId)
     {
         var oldSearch = await jobSearchContext.Searches.FirstOrDefaultAsync(s => s.SearchId == searchModel.SearchId && s.UserId == userId);
 
@@ -87,10 +88,10 @@ public class SearchService(JobSearchContext jobSearchContext)
 
             await jobSearchContext.SaveChangesAsync();
             
-            return Results.Ok();
+            return TypedResults.Ok();
         }
 
-        return Results.Problem(new ProblemDetails
+        return TypedResults.Problem(new ProblemDetails
         {
             Detail = "Failed to update job search.",
             Status = StatusCodes.Status404NotFound,

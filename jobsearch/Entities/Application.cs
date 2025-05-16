@@ -37,11 +37,11 @@ public class Application
     public bool Active { get; set; }
     
     [Column("lowsalary")]
-    public decimal LowSalary { get; set; }
+    public decimal? LowSalary { get; set; }
     
     [Column("highsalary")]
-    public decimal HighSalary { get; set; } 
+    public decimal? HighSalary { get; set; } 
     
     [Column("requestedsalary")]
-    public decimal RequestedSalary { get; set; }
+    public decimal? RequestedSalary { get; set; }
 }
