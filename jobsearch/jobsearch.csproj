@@ -21,4 +21,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Commands\Activity\" />
+    <Folder Include="Services\Commands\Contacts\" />
+    <Folder Include="Services\Queries\Activity\" />
+    <Folder Include="Services\Queries\Contacts\" />
+  </ItemGroup>
+
 </Project>

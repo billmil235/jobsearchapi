@@ -2,6 +2,8 @@ using System.Security.Claims;
 using JobSearch.Extensions;
 using JobSearch.Models;
 using JobSearch.Services;
+using JobSearch.Services.Commands.JobSearch;
+using JobSearch.Services.Queries.JobSearch;
 
 namespace JobSearch.Endpoints;
 
@@ -9,7 +11,7 @@ public static class JobSearchEndpoints
 {
     public static void RegisterJobSearchEndpoints(this WebApplication app)
     {
-        app.MapGet("/Searches", (string? searchId, ClaimsPrincipal user, SearchService searchService) =>
+        app.MapGet("/Searches", (string? searchId, ClaimsPrincipal user, GetJobSearchByUserIdQuery getJobSearchByUserIdQuery) =>
         {
             Guid? searchIdGuid = null;
             var userId = user.GetGuid();
@@ -18,14 +20,14 @@ public static class JobSearchEndpoints
             {
                 searchIdGuid = new Guid(searchId);
             }
-            return searchService.GetSearchesForUser(userId, searchIdGuid);
+            return getJobSearchByUserIdQuery.GetSearchesForUser(userId, searchIdGuid);
         })
         .RequireAuthorization("user");
         
-        app.MapPost("/CreateSeach", async (ClaimsPrincipal user, SearchService searchService, SearchModel search) => 
+        app.MapPost("/CreateSeach", async (ClaimsPrincipal user, CreateJobSearchCommand createJobSearchCommand, SearchModel search) => 
         {
             var userId = user.GetGuid();
-            return await searchService.CreateNewSearch(search, userId);
+            return await createJobSearchCommand.CreateNewSearch(search, userId);
         })
         .RequireAuthorization("user");
     }

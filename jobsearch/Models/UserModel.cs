@@ -1,6 +1,6 @@
 namespace JobSearch.Models;
 
-public class UserModel
+public record UserModel
 {
     public string Username { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;

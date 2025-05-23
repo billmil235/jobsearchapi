@@ -1,6 +1,6 @@
 namespace JobSearch.Models;
 
-public class ApplicationPreview
+public record ApplicationPreview
 {
     public required Guid ApplicationId { get; set; }
     public required string CompanyName { get; set; }

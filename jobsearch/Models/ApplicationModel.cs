@@ -1,6 +1,6 @@
 namespace JobSearch.Models;
 
-public class ApplicationModel
+public record ApplicationModel
 {
     public string? ApplicationId { get; set; }
     public string SearchId { get; set; } = Guid.Empty.ToString();

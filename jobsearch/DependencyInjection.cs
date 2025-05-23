@@ -1,4 +1,8 @@
 using JobSearch.Services;
+using jobsearch.Services.Commands.Application;
+using JobSearch.Services.Commands.JobSearch;
+using JobSearch.Services.Queries.Application;
+using JobSearch.Services.Queries.JobSearch;
 
 namespace JobSearch;
 
@@ -8,10 +12,16 @@ public static class DependencyInjection
     {
         builder.Services.AddSingleton<TokenService>();
         builder.Services.AddScoped<UsersService>();
-        builder.Services.AddScoped<SearchService>();
-        builder.Services.AddScoped<ActivityService>();
-        builder.Services.AddScoped<ContactService>();
         builder.Services.AddScoped<LookupService>();
-        builder.Services.AddScoped<ApplicationService>();
+
+        builder.Services.AddScoped<CreateApplicationCommand>();
+        builder.Services.AddScoped<DeleteApplicationByApplicationIdCommand>();
+        builder.Services.AddScoped<GetApplicationPreviewByApplicationIdQuery>();
+        builder.Services.AddScoped<GetAllApplicationsBySearchIdQuery>();
+
+        builder.Services.AddScoped<GetJobSearchByUserIdQuery>();
+        builder.Services.AddScoped<CreateJobSearchCommand>();
+        builder.Services.AddScoped<DeleteSearchBySearchIdCommand>();
+        builder.Services.AddScoped<UpdateJobSearchCommand>();
     }
 }

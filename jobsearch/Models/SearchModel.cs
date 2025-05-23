@@ -1,6 +1,6 @@
 namespace JobSearch.Models;
 
-public class SearchModel
+public record SearchModel
 {
     public Guid SearchId { get; set; }
     public Guid UserId { get; set; }
