@@ -47,11 +47,15 @@ public class Application
     [Column("requestedsalary")]
     public decimal? RequestedSalary { get; set; }
 
+    [Column("jobtitle")]
+    public string? JobTitle { get; set; }
+    
     public static Application Create(DateTime applicationDate, 
         int applicationSourceTypeId, 
         int applicationTypeId, 
         string companyName, 
         string? companyWebSite, 
+        string? jobTitle,
         Guid searchId,
         decimal? lowSalary,
         decimal? highSalary,
@@ -68,7 +72,8 @@ public class Application
             LowSalary = lowSalary,
             HighSalary = highSalary,
             RequestedSalary = requestedSalary,
-            Deleted = false
+            Deleted = false,
+            JobTitle = jobTitle,
         };
     }
 }

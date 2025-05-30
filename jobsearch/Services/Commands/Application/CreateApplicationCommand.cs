@@ -14,9 +14,10 @@ public class CreateApplicationCommand(JobSearchContext jobSearchContext)
             application.ApplicationTypeId,
             application.CompanyName,
             application.CompanyWebSite,
+            application.JobTitle,
             new Guid(application.SearchId),
-            application.LowSalaryRange,
-            application.HighSalaryRange,
+            application.LowSalary,
+            application.HighSalary,
             application.RequestedSalary
         );
 

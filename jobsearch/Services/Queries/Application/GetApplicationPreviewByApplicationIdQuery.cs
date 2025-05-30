@@ -26,6 +26,9 @@ public class GetApplicationPreviewByApplicationIdQuery(JobSearchContext jobSearc
             CompanyName = application.CompanyName,
             ApplicationId = application.ApplicationId,
             ApplicationDate = application.ApplicationDate,
+            LowSalary = application.LowSalary,
+            HighSalary = application.HighSalary,
+            RequestedSalary = application.RequestedSalary,
             Notes = string.Empty
         };
 
