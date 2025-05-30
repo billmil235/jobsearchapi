@@ -9,16 +9,9 @@ public class CreateJobSearchCommand(JobSearchContext jobSearchContext)
 {
     public async Task<Results<Ok<Search>, ProblemHttpResult>> CreateNewSearch(SearchModel searchModel,  Guid userId)
     {
-        var newSearch = new Search() 
-        {
-            UserId = userId,
-            SearchName = searchModel.SearchName,
-            StartDate = searchModel.StartDate,
-            EndDate = null
-        };
-
         try
         {
+            var newSearch = Search.Create(userId, searchModel.StartDate, searchModel.SearchName);
             await jobSearchContext.Searches.AddAsync(newSearch);
             await jobSearchContext.SaveChangesAsync();
 

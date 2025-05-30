@@ -21,16 +21,7 @@ public class GetAllApplicationsBySearchIdQuery(JobSearchContext jobSearchContext
         }
         
         var applicationList = await applicationListQuery
-            .Select(x => new ApplicationModel
-            {
-                ApplicationDate = x.ApplicationDate.ToDateTime(new TimeOnly(0,0,0)),
-                ApplicationTypeId = x.ApplicationTypeId,
-                ApplicationSourceTypeId = x.ApplicationSourceTypeId,
-                ApplicationId = x.ApplicationId.ToString(),
-                CompanyWebSite = x.CompanyWebSite,
-                CompanyName = x.CompanyName,
-                SearchId = x.SearchId.ToString(),
-            })
+            .Select(x => ApplicationModel.FromApplication(x))
             .ToListAsync();
 
         foreach (var application in applicationList)

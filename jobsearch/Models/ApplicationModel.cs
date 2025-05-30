@@ -1,3 +1,5 @@
+using JobSearch.Entities;
+
 namespace JobSearch.Models;
 
 public record ApplicationModel
@@ -9,7 +11,24 @@ public record ApplicationModel
     public string? CompanyWebSite { get; set; }
     public int ApplicationTypeId { get; set; }
     public int ApplicationSourceTypeId { get; set; }
-    public decimal LowSalaryRange { get; set; }
-    public decimal HighSalaryRange { get; set; }
-    public decimal RequestedSalary { get; set; }
+    public decimal? LowSalaryRange { get; set; }
+    public decimal? HighSalaryRange { get; set; }
+    public decimal? RequestedSalary { get; set; }
+
+    public static ApplicationModel FromApplication(Application application)
+    {
+        return new ApplicationModel
+        {
+            ApplicationDate = application.ApplicationDate.ToDateTime(new TimeOnly(0, 0, 0)),
+            ApplicationTypeId = application.ApplicationTypeId,
+            ApplicationSourceTypeId = application.ApplicationSourceTypeId,
+            ApplicationId = application.ApplicationId.ToString(),
+            CompanyWebSite = application.CompanyWebSite,
+            CompanyName = application.CompanyName,
+            SearchId = application.SearchId.ToString(),
+            LowSalaryRange = application.LowSalary,
+            HighSalaryRange = application.HighSalary,
+            RequestedSalary = application.RequestedSalary
+        };
+    }
 }

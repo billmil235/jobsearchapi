@@ -9,14 +9,7 @@ public class GetJobSearchByUserIdQuery(JobSearchContext jobSearchContext)
     {
         var searches = await jobSearchContext.Searches
             .Where(s => s.UserId == userId && s.Deleted == false && (s.SearchId == searchId || searchId == null))
-            .Select(search => new SearchModel 
-            { 
-                SearchId = search.SearchId,
-                StartDate = search.StartDate,
-                EndDate = search.EndDate,
-                SearchName = search.SearchName,
-                UserId = userId
-            })
+            .Select(search => SearchModel.FromSearch(search))
             .ToListAsync();
 
         foreach(var search in searches)

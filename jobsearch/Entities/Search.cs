@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using JobSearch.Services.Commands.JobSearch;
 
 namespace JobSearch.Entities;
 
@@ -24,4 +25,17 @@ public class Search
     
     [Column("deleted")]
     public bool Deleted { get; set; } = false;
+
+    public IEnumerable<Application> Applications { get; set; } = [];
+
+    public static Search Create(Guid userId, DateOnly startDate, string searchName)
+    {
+        return new Search()
+        {
+            UserId = userId,
+            StartDate = startDate,
+            EndDate = null,
+            SearchName = searchName
+        };
+    }
 }

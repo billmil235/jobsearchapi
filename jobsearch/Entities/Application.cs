@@ -6,6 +6,8 @@ namespace JobSearch.Entities;
 [Table("application")]
 public class Application
 {
+    private Application() { }
+
     [Column("applicationid")]
     [Key]
     public Guid ApplicationId { get; set; }
@@ -44,4 +46,29 @@ public class Application
     
     [Column("requestedsalary")]
     public decimal? RequestedSalary { get; set; }
+
+    public static Application Create(DateTime applicationDate, 
+        int applicationSourceTypeId, 
+        int applicationTypeId, 
+        string companyName, 
+        string? companyWebSite, 
+        Guid searchId,
+        decimal? lowSalary,
+        decimal? highSalary,
+        decimal? requestedSalary)
+    {
+        return new Application()
+        {
+            ApplicationDate = DateOnly.FromDateTime(applicationDate),
+            ApplicationSourceTypeId = applicationSourceTypeId,
+            ApplicationTypeId = applicationTypeId,
+            CompanyName = companyName,
+            CompanyWebSite = companyWebSite,
+            SearchId = searchId,
+            LowSalary = lowSalary,
+            HighSalary = highSalary,
+            RequestedSalary = requestedSalary,
+            Deleted = false
+        };
+    }
 }

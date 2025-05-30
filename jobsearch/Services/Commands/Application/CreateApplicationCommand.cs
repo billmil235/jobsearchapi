@@ -8,20 +8,21 @@ public class CreateApplicationCommand(JobSearchContext jobSearchContext)
 {
     public async Task<Results<Ok<ApplicationModel>, ProblemHttpResult>> CreateApplication(ApplicationModel application)
     {
-        var applicationEntity = new JobSearch.Entities.Application
-        {
-            ApplicationDate = DateOnly.FromDateTime(application.ApplicationDate),
-            ApplicationSourceTypeId = application.ApplicationSourceTypeId,
-            ApplicationTypeId = application.ApplicationTypeId,
-            CompanyName = application.CompanyName,
-            CompanyWebSite = application.CompanyWebSite,
-            SearchId = new Guid(application.SearchId),
-            Deleted = false
-        };
+        var applicationEntity = JobSearch.Entities.Application.Create(
+            application.ApplicationDate,
+            application.ApplicationSourceTypeId,
+            application.ApplicationTypeId,
+            application.CompanyName,
+            application.CompanyWebSite,
+            new Guid(application.SearchId),
+            application.LowSalaryRange,
+            application.HighSalaryRange,
+            application.RequestedSalary
+        );
 
         try
         {
-            var savedApplication = await jobSearchContext.Applications.AddAsync(applicationEntity);
+            await jobSearchContext.Applications.AddAsync(applicationEntity);
             application.ApplicationId = applicationEntity.ApplicationId.ToString();
             await jobSearchContext.SaveChangesAsync();
 
