@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using JobSearch.Extensions;
 using JobSearch.Models;
 using JobSearch.Services;
 using jobsearch.Services.Commands.Application;
@@ -29,6 +30,14 @@ public static class ApplicationEndpoints
         group.MapGet("/Preview/{applicationId}",
             (string applicationId, ClaimsPrincipal user, GetApplicationPreviewByApplicationIdQuery getApplicationPreviewByApplicationIdQuery) => getApplicationPreviewByApplicationIdQuery.GetApplicationPreview(applicationId) );
 
+        group.MapGet("/{applicationId}",
+            async (string applicationId, ClaimsPrincipal user, GetApplicationByApplicationIdQuery getApplicationByApplicationIdQuery) =>
+            {
+                Guid userId = user.GetGuid();
+                Guid applicationGuid = new (applicationId);
+                return await getApplicationByApplicationIdQuery.GetApplicationByApplicationId(applicationGuid, userId);
+            });
+        
         return group;
     }
 }

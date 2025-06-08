@@ -18,6 +18,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<DeleteApplicationByApplicationIdCommand>();
         builder.Services.AddScoped<GetApplicationPreviewByApplicationIdQuery>();
         builder.Services.AddScoped<GetAllApplicationsBySearchIdQuery>();
+        builder.Services.AddScoped<GetApplicationByApplicationIdQuery>();
 
         builder.Services.AddScoped<GetJobSearchByUserIdQuery>();
         builder.Services.AddScoped<CreateJobSearchCommand>();
