@@ -5,6 +5,7 @@ using JobSearch.Services;
 using jobsearch.Services.Commands.Application;
 using JobSearch.Services.Queries.Application;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace JobSearch.Endpoints;
 
@@ -12,11 +13,13 @@ public static class ApplicationEndpoints
 {
     public static RouteGroupBuilder RegisterApplicationEndpoints(this RouteGroupBuilder group)
     {
-        group.MapGet("/List/{searchId}", 
-            (string searchId, [FromQuery] bool activeOnly, ClaimsPrincipal user, GetAllApplicationsBySearchIdQuery getAllApplicationsBySearchIdQuery) => getAllApplicationsBySearchIdQuery.ListApplications(searchId, activeOnly));
-
         group.MapPost("/", 
             (ApplicationModel application, ClaimsPrincipal user, CreateApplicationCommand createApplicationCommand) => createApplicationCommand.CreateApplication(application));
+        
+        group.MapPut("/", (ApplicationModel ApplicationModel, UpdateApplicationCommand updateApplicationCommand, ClaimsPrincipal user) => updateApplicationCommand.UpdateApplication(ApplicationModel));
+        
+        group.MapGet("/List/{searchId}", 
+            (string searchId, [FromQuery] bool activeOnly, ClaimsPrincipal user, GetAllApplicationsBySearchIdQuery getAllApplicationsBySearchIdQuery) => getAllApplicationsBySearchIdQuery.ListApplications(searchId, activeOnly));
         
         group.MapGet("/Types", 
            async (LookupService lookupService) => Results.Ok(await lookupService.GetApplicationTypes()) );

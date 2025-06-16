@@ -48,7 +48,30 @@ public class Application
     public decimal? RequestedSalary { get; set; }
 
     [Column("jobtitle")]
+    [MaxLength(100)]
     public string? JobTitle { get; set; }
+    
+    public void Update(DateTime applicationDate, 
+        int applicationSourceTypeId, 
+        int applicationTypeId, 
+        string companyName, 
+        string? companyWebSite, 
+        string? jobTitle,
+        decimal? lowSalary,
+        decimal? highSalary,
+        decimal? requestedSalary)
+    {
+        ApplicationDate = DateOnly.FromDateTime(applicationDate);
+        ApplicationSourceTypeId = applicationSourceTypeId;
+        ApplicationTypeId = applicationTypeId;
+        CompanyName = companyName;
+        CompanyWebSite = companyWebSite;
+        LowSalary = lowSalary;
+        HighSalary = highSalary;
+        RequestedSalary = requestedSalary;
+        Deleted = false;
+        JobTitle = jobTitle;
+    }
     
     public static Application Create(DateTime applicationDate, 
         int applicationSourceTypeId, 
