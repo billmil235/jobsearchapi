@@ -5,10 +5,10 @@ namespace JobSearch.Services.Queries.Application;
 
 public class GetAllApplicationsBySearchIdQuery(JobSearchContext jobSearchContext)
 {
-    public async IAsyncEnumerable<ApplicationModel> ListApplications(string searchId, bool activeOnly = false, bool includeDeleted = false)
+    public async IAsyncEnumerable<ApplicationModel> ListApplications(Guid searchId, int pageNumber, int pageSize, bool activeOnly = false, bool includeDeleted = false)
     {
         var applicationListQuery = jobSearchContext.Applications
-            .Where(s => s.SearchId == new Guid(searchId));
+            .Where(s => s.SearchId == searchId);
 
         if (!includeDeleted)
         {
@@ -22,6 +22,8 @@ public class GetAllApplicationsBySearchIdQuery(JobSearchContext jobSearchContext
         
         var applicationList = await applicationListQuery
             .Select(x => ApplicationModel.FromApplicationEntity(x))
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
         foreach (var application in applicationList)

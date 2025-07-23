@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using JobSearch.Extensions;
 using JobSearch.Models;
-using JobSearch.Services;
 using JobSearch.Services.Commands.JobSearch;
 using JobSearch.Services.Queries.JobSearch;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JobSearch.Endpoints;
 
@@ -11,16 +11,10 @@ public static class JobSearchEndpoints
 {
     public static void RegisterJobSearchEndpoints(this WebApplication app)
     {
-        app.MapGet("/Searches", (string? searchId, ClaimsPrincipal user, GetJobSearchByUserIdQuery getJobSearchByUserIdQuery) =>
+        app.MapGet("/Searches", (Guid? searchId, bool? activeOnly, ClaimsPrincipal user, GetJobSearchByUserIdQuery getJobSearchByUserIdQuery, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10) =>
         {
-            Guid? searchIdGuid = null;
             var userId = user.GetGuid();
-            
-            if (searchId != null)
-            {
-                searchIdGuid = new Guid(searchId);
-            }
-            return getJobSearchByUserIdQuery.GetSearchesForUser(userId, searchIdGuid);
+            return getJobSearchByUserIdQuery.GetSearchesForUser(userId, pageNumber, pageSize, activeOnly, searchId);
         })
         .RequireAuthorization("user");
         

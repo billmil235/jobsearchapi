@@ -11,22 +11,23 @@ public class UpdateJobSearchCommand(JobSearchContext jobSearchContext)
     {
         var oldSearch = await jobSearchContext.Searches.FirstOrDefaultAsync(s => s.SearchId == searchModel.SearchId && s.UserId == userId);
 
-        if (oldSearch != null)
+        if (oldSearch == null)
         {
-            oldSearch.SearchName = searchModel.SearchName;
-            oldSearch.StartDate = searchModel.StartDate;
-            oldSearch.EndDate = searchModel.EndDate;
-
-            await jobSearchContext.SaveChangesAsync();
-            
-            return TypedResults.Ok();
+            return TypedResults.Problem(new ProblemDetails
+            {
+                Detail = "Failed to update job search.",
+                Status = StatusCodes.Status404NotFound,
+                Title = "Job search not found"
+            });
         }
+        
+        oldSearch.SearchName = searchModel.SearchName;
+        oldSearch.StartDate = searchModel.StartDate;
+        oldSearch.EndDate = searchModel.EndDate;
 
-        return TypedResults.Problem(new ProblemDetails
-        {
-            Detail = "Failed to update job search.",
-            Status = StatusCodes.Status404NotFound,
-            Title = "Job search not found"
-        });
+        await jobSearchContext.SaveChangesAsync();
+            
+        return TypedResults.Ok();
+
     }
 }

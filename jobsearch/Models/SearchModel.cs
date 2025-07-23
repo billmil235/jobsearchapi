@@ -4,11 +4,11 @@ namespace JobSearch.Models;
 
 public record SearchModel
 {
-    public Guid SearchId { get; set; }
-    public Guid UserId { get; set; }
-    public DateOnly StartDate { get; set; }
-    public DateOnly? EndDate { get; set; }
-    public string SearchName { get; set; } = "Job Search";
+    public required Guid SearchId { get; init; }
+    public required Guid UserId { get; init; }
+    public required DateOnly StartDate { get; init; }
+    public DateOnly? EndDate { get; init; }
+    public required string SearchName { get; init; }
 
     public static SearchModel FromSearch(Search search)
     {
