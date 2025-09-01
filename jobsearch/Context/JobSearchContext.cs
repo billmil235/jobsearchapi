@@ -14,6 +14,8 @@ public class JobSearchContext : DbContext
 
     public DbSet<Users> Users => Set<Users>();
     
+    public DbSet<ApplicationContact> ApplicationContacts => Set<ApplicationContact>();
+    
     public DbSet<ApplicationType> ApplicationTypes => Set<ApplicationType>();
     public DbSet<ApplicationSourceType> ApplicationSourceTypes => Set<ApplicationSourceType>();
 

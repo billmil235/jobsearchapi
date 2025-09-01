@@ -51,6 +51,8 @@ public class Application
     [MaxLength(100)]
     public string? JobTitle { get; set; }
     
+    public List<ApplicationContact> ApplicationContacts { get; set; } = new List<ApplicationContact>();
+    
     public void Update(DateTime applicationDate, 
         int applicationSourceTypeId, 
         int applicationTypeId, 
