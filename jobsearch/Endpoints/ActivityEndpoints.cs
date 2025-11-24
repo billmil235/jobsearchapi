@@ -1,12 +1,17 @@
 using jobsearch.Context;
+using JobSearch.Services;
 
 namespace JobSearch.Endpoints;
 
 public static class ActivityEndpoints
 {
-    public static void RegisterActivityEndpoints(this WebApplication app)
+    public static RouteGroupBuilder RegisterActivityEndpoints(this RouteGroupBuilder group)
     {
-        app.MapPost("/AddActivity", (JobSearchContext db) => Results.Ok() )
-            .RequireAuthorization("user");
+        group.MapGet("/ActivityTypes", 
+            async (LookupService lookupService) => Results.Ok(await lookupService.GetApplicationActivityTypes()) );
+        
+        group.MapPost("/AddActivity", (JobSearchContext db) => Results.Ok() );
+
+        return group;
     }
 }

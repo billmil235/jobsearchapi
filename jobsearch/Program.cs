@@ -124,6 +124,6 @@ app.RegisterJobSearchEndpoints();
 app.MapGroup("/Application").RegisterApplicationEndpoints().RequireAuthorization("user");
 app.RegisterContactEndpoints();
 app.RegisterUsersEndpoints();
-app.RegisterActivityEndpoints();
+app.MapGroup("/Activity").RegisterActivityEndpoints().RequireAuthorization("user");
 
 app.Run();

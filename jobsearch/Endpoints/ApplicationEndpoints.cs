@@ -25,9 +25,6 @@ public static class ApplicationEndpoints
 
         group.MapGet("/Sources", 
             async (LookupService lookupService) => Results.Ok(await lookupService.GetApplicationSourceTypes()) );
-
-        group.MapGet("/ActivityTypes", 
-            async (LookupService lookupService) => Results.Ok(await lookupService.GetApplicationActivityTypes()) );
         
         group.MapDelete("/{applicationId}",
             (string applicationId, DeleteApplicationByApplicationIdCommand deleteApplicationByApplicationIdCommand) => deleteApplicationByApplicationIdCommand.DeleteApplication(applicationId));
