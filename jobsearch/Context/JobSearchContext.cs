@@ -1,11 +1,10 @@
-using System.Data.Common;
 using JobSearch.Entities;
 using Microsoft.EntityFrameworkCore;
 
-public class JobSearchContext : DbContext
-{
-    public JobSearchContext(DbContextOptions<JobSearchContext> options) : base(options) { }
+namespace jobsearch.Context;
 
+public class JobSearchContext(DbContextOptions<JobSearchContext> options) : DbContext(options)
+{
     public DbSet<Search> Searches => Set<Search>();
 
     public DbSet<Application> Applications => Set<Application>();
@@ -18,7 +17,10 @@ public class JobSearchContext : DbContext
     
     public DbSet<ApplicationType> ApplicationTypes => Set<ApplicationType>();
     public DbSet<ApplicationSourceType> ApplicationSourceTypes => Set<ApplicationSourceType>();
-
+    
+    public DbSet<ApplicationActivity> ApplicationActivities { get; set; }
+    public DbSet<ApplicationActivityType> ApplicationActivityTypes { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.HasDefaultSchema("public");

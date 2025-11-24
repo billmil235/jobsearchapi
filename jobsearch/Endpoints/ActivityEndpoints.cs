@@ -1,3 +1,5 @@
+using jobsearch.Context;
+
 namespace JobSearch.Endpoints;
 
 public static class ActivityEndpoints

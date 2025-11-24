@@ -1,3 +1,4 @@
+using jobsearch.Context;
 using JobSearch.Entities;
 using JobSearch.Models.Lookups;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,24 @@ public class LookupService(JobSearchContext jobSearchContext, HybridCache cache)
             {
                 ApplicationTypeId = appType.ApplicationTypeId,
                 ApplicationTypeName = appType.ApplicationTypeName,
+            }).ToListAsync(cancellationToken: cancel);
+    }
+    
+    public async ValueTask<List<ApplicationActivityTypeLookup>> GetApplicationActivityTypes()
+    {
+        return await cache.GetOrCreateAsync(
+            $"LookUps:ApplicationActivityTypes",
+            Factory,
+            null,
+            null,
+            CancellationToken.None
+        );
+
+        async ValueTask<List<ApplicationActivityTypeLookup>> Factory(CancellationToken cancel) => 
+            await jobSearchContext.ApplicationActivityTypes.Select(appType => new ApplicationActivityTypeLookup
+            {
+                ApplicationActivityTypeId = appType.ApplicationActivityTypeId,
+                ApplicationActivityTypeName = appType.ApplicationActivityTypeName,
             }).ToListAsync(cancellationToken: cancel);
     }
 }

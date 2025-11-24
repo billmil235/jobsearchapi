@@ -1,4 +1,5 @@
 using JobSearch;
+using jobsearch.Context;
 using JobSearch.Endpoints;
 using JobSearch.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
