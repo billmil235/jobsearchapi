@@ -121,9 +121,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.RegisterJobSearchEndpoints();
-app.MapGroup("/Application").RegisterApplicationEndpoints().RequireAuthorization("user");
-app.RegisterContactEndpoints();
+app.MapGroup("/application").RegisterApplicationEndpoints().RequireAuthorization("user");
+app.MapGroup("/contacts").RequireAuthorization("user");
 app.RegisterUsersEndpoints();
-app.MapGroup("/Activity").RegisterActivityEndpoints().RequireAuthorization("user");
+app.MapGroup("/activity").RegisterActivityEndpoints().RequireAuthorization("user");
 
 app.Run();

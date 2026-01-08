@@ -7,8 +7,19 @@ namespace jobsearch.Services.Commands.Application;
 
 public class CreateApplicationCommand(JobSearchContext jobSearchContext)
 {
-    public async Task<Results<Ok<ApplicationModel>, ProblemHttpResult>> CreateApplication(ApplicationModel application)
+    public async Task<Results<Ok<ApplicationModel>, ProblemHttpResult>> CreateApplication(ApplicationModel application, Guid userId)
     {
+        var search = jobSearchContext.Searches.FirstOrDefault(search =>
+            search.SearchId == application.SearchId && search.UserId == userId);
+
+        if (search is null)
+            return TypedResults.Problem(new ProblemDetails
+            {
+                Detail = "Search not found.",
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Bad request."
+            });
+        
         var applicationEntity = JobSearch.Entities.Application.Create(
             application.ApplicationDate,
             application.ApplicationSourceTypeId,
@@ -16,7 +27,7 @@ public class CreateApplicationCommand(JobSearchContext jobSearchContext)
             application.CompanyName,
             application.CompanyWebSite,
             application.JobTitle,
-            new Guid(application.SearchId),
+            application.SearchId,
             application.LowSalary,
             application.HighSalary,
             application.RequestedSalary
@@ -25,7 +36,7 @@ public class CreateApplicationCommand(JobSearchContext jobSearchContext)
         try
         {
             await jobSearchContext.Applications.AddAsync(applicationEntity);
-            application.ApplicationId = applicationEntity.ApplicationId.ToString();
+            application.ApplicationId = applicationEntity.ApplicationId;
             await jobSearchContext.SaveChangesAsync();
 
             return TypedResults.Ok(application);

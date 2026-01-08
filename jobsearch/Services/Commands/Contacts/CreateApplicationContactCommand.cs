@@ -8,7 +8,7 @@ namespace jobsearch.Services.Commands.Contacts;
 
 public class CreateApplicationContactCommand(JobSearchContext context)
 {
-    public async Task<IResult> ExecuteAsync([FromBody] ApplicationContactModel contact)
+    public async Task<IResult> ExecuteAsync(ApplicationContactModel contact)
     {
         var application = await context.Applications
             .FirstOrDefaultAsync(x => x.ApplicationId == contact.ApplicationId);

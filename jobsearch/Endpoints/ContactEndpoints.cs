@@ -1,12 +1,16 @@
-using jobsearch.Context;
+using JobSearch.Models;
+using jobsearch.Services.Commands.Contacts;
 
 namespace JobSearch.Endpoints;
 
 public static class ContactEndpoints
 {
-    public static void RegisterContactEndpoints(this WebApplication app)
+    public static RouteGroupBuilder RegisterContactEndpoints(this RouteGroupBuilder group)
     {
-        app.MapPost("/CreateApplicationContact", (JobSearchContext db) => Results.Ok() )
-            .RequireAuthorization("user");
+        group.MapPost("/create",
+                async (CreateApplicationContactCommand command, ApplicationContactModel contact) =>
+                    await command.ExecuteAsync(contact));
+
+        return group;
     }
 }

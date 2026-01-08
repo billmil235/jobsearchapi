@@ -11,7 +11,7 @@ public class UpdateApplicationCommand(JobSearchContext jobSearchContext)
     {
         try
         {
-            var applicationEntity = jobSearchContext.Applications.Single(x => x.ApplicationId == new Guid(application.ApplicationId!));
+            var applicationEntity = jobSearchContext.Applications.Single(x => x.ApplicationId == application.ApplicationId!);
 
             applicationEntity.Update(application.ApplicationDate,
                 application.ApplicationSourceTypeId,
