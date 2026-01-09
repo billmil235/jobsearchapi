@@ -25,6 +25,9 @@ public class JobSearchContext(DbContextOptions<JobSearchContext> options) : DbCo
     {
         builder.HasDefaultSchema("public");
 
+        builder.Entity<Search>()
+            .HasMany(app => app.Applications);
+        
         base.OnModelCreating(builder);
     }
 }

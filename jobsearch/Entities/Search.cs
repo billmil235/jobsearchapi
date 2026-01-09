@@ -26,7 +26,7 @@ public class Search
     [Column("deleted")]
     public bool Deleted { get; init; }
 
-    public IEnumerable<Application> Applications { get; init; } = [];
+    public virtual ICollection<Application>? Applications { get; set; }
 
     public static Search Create(Guid userId, DateOnly startDate, string searchName)
     {

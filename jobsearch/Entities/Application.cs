@@ -53,6 +53,8 @@ public class Application
     
     public List<ApplicationContact> ApplicationContacts { get; set; } = new List<ApplicationContact>();
     
+    public Search Search { get; set; }
+    
     public void Update(DateTime applicationDate, 
         int applicationSourceTypeId, 
         int applicationTypeId, 

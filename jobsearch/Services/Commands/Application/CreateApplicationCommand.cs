@@ -2,6 +2,7 @@ using jobsearch.Context;
 using JobSearch.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace jobsearch.Services.Commands.Application;
 
@@ -9,16 +10,18 @@ public class CreateApplicationCommand(JobSearchContext jobSearchContext)
 {
     public async Task<Results<Ok<ApplicationModel>, ProblemHttpResult>> CreateApplication(ApplicationModel application, Guid userId)
     {
-        var search = jobSearchContext.Searches.FirstOrDefault(search =>
+        var search = await jobSearchContext.Searches.FirstOrDefaultAsync(search =>
             search.SearchId == application.SearchId && search.UserId == userId);
 
         if (search is null)
+        {
             return TypedResults.Problem(new ProblemDetails
             {
                 Detail = "Search not found.",
                 Status = StatusCodes.Status400BadRequest,
                 Title = "Bad request."
             });
+        }
         
         var applicationEntity = JobSearch.Entities.Application.Create(
             application.ApplicationDate,
